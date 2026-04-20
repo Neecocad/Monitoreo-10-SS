@@ -17,7 +17,6 @@ async function initApp() {
     await _renderRecordsList();
     _startNewRecord();
     _registerSW();
-    _checkVersion();
   } catch (err) {
     showToast('Error al iniciar la app: ' + err.message, 'error');
     console.error(err);
@@ -287,27 +286,22 @@ function showToast(message, type = 'info') {
 
 function _registerSW() {
   if (!('serviceWorker' in navigator)) return;
-  navigator.serviceWorker.register('sw.js').catch(err =>
-    console.warn('SW no registrado:', err)
-  );
-}
-
-async function _checkVersion() {
-  try {
-    const res  = await fetch('version.json?t=' + Date.now());
-    const data = await res.json();
-    const banner = document.getElementById('update-banner');
-    const stored = localStorage.getItem('app_version');
-    if (stored && stored !== data.version && banner) {
-      banner.hidden = false;
-      document.getElementById('btn-update').addEventListener('click', () => {
-        localStorage.setItem('app_version', data.version);
-        window.location.reload(true);
+  navigator.serviceWorker.register('sw.js').then(reg => {
+    // Muestra banner solo cuando el SW detecta una nueva versión esperando
+    reg.addEventListener('updatefound', () => {
+      const newSW = reg.installing;
+      newSW.addEventListener('statechange', () => {
+        if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+          const banner = document.getElementById('update-banner');
+          if (banner) banner.hidden = false;
+          document.getElementById('btn-update').addEventListener('click', () => {
+            newSW.postMessage({ type: 'SKIP_WAITING' });
+            window.location.reload();
+          });
+        }
       });
-    } else {
-      localStorage.setItem('app_version', data.version);
-    }
-  } catch (_) { /* offline, skip */ }
+    });
+  }).catch(err => console.warn('SW no registrado:', err));
 }
 
 document.addEventListener('DOMContentLoaded', initApp);
