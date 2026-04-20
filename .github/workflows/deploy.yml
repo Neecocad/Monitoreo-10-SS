@@ -1,0 +1,48 @@
+name: Deploy PWA – Monitoreo 10SS
+
+on:
+  push:
+    branches: [claude/build-offline-form-vtITc]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Crear ZIP de distribución
+        run: zip -r monitoreo-10ss.zip . -x ".git/*" ".github/*"
+
+      - name: Subir ZIP como artifact descargable
+        uses: actions/upload-artifact@v4
+        with:
+          name: monitoreo-10ss-${{ github.sha }}
+          path: monitoreo-10ss.zip
+          retention-days: 30
+
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v4
+
+      - name: Empaquetar sitio para Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - name: Publicar en GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4
