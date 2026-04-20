@@ -144,6 +144,7 @@
   "csv_export": {
     "separator": ";",
     "bom": true,
+    "sep_hint": true,
     "columns": [
       "fecha",
       "proyecto",
