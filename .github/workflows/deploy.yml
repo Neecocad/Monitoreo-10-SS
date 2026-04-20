@@ -36,7 +36,9 @@ jobs:
           retention-days: 30
 
       - name: Configurar GitHub Pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - name: Empaquetar sitio para Pages
         uses: actions/upload-pages-artifact@v3
