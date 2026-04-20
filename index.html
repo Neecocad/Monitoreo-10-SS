@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#1a6b3c" />
+  <title>Monitoreo 10% – Santiago Solar</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:      #1a6b3c;
+      --green-dk:   #124d2c;
+      --green-lt:   #e8f5ee;
+      --red:        #c0392b;
+      --orange:     #e67e22;
+      --blue:       #2980b9;
+      --gray:       #6b7280;
+      --gray-lt:    #f3f4f6;
+      --border:     #d1d5db;
+      --text:       #111827;
+      --radius:     6px;
+      --shadow:     0 1px 3px rgba(0,0,0,.12);
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 16px;
+      color: var(--text);
+      background: var(--gray-lt);
+      min-height: 100vh;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      background: var(--green);
+      color: #fff;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow);
+    }
+    .topbar h1 { font-size: 1rem; font-weight: 700; line-height: 1.2; }
+    .topbar .subtitle { font-size: .75rem; opacity: .85; }
+
+    #btn-show-records {
+      position: relative;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.4);
+      color: #fff;
+      border-radius: var(--radius);
+      padding: 6px 12px;
+      cursor: pointer;
+      font-size: .85rem;
+      white-space: nowrap;
+    }
+    #records-badge {
+      position: absolute;
+      top: -6px; right: -6px;
+      background: var(--orange);
+      color: #fff;
+      border-radius: 50%;
+      width: 18px; height: 18px;
+      font-size: .65rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ── Update banner ── */
+    #update-banner {
+      background: var(--orange);
+      color: #fff;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: .85rem;
+    }
+    #btn-update {
+      background: #fff;
+      color: var(--orange);
+      border: none;
+      border-radius: var(--radius);
+      padding: 4px 10px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    /* ── Main layout ── */
+    main { padding: 12px; max-width: 640px; margin: 0 auto; }
+
+    /* ── Cards ── */
+    .card {
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .card-title {
+      font-size: .8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--green);
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--green-lt);
+    }
+
+    /* ── Fields ── */
+    .field-group { margin-bottom: 12px; }
+    .field-group label {
+      display: block;
+      font-size: .85rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #374151;
+    }
+    .required { color: var(--red); }
+    .field-group input,
+    .field-group select,
+    .field-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 1rem;
+      background: #fff;
+      color: var(--text);
+      appearance: auto;
+      -webkit-appearance: auto;
+    }
+    .field-group input:focus,
+    .field-group select:focus,
+    .field-group textarea:focus {
+      outline: 2px solid var(--green);
+      outline-offset: 1px;
+      border-color: var(--green);
+    }
+    .field-group input:disabled,
+    .field-group select:disabled,
+    .field-group textarea:disabled {
+      background: #f9fafb;
+      color: var(--gray);
+      cursor: not-allowed;
+    }
+    .field-display {
+      display: inline-block;
+      padding: 10px 12px;
+      background: var(--gray-lt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 1rem;
+      min-width: 60px;
+      font-weight: 700;
+      color: var(--green-dk);
+    }
+
+    /* ── Buttons ── */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    button { cursor: pointer; border: none; border-radius: var(--radius); }
+    .btn-primary {
+      background: var(--green);
+      color: #fff;
+      padding: 12px 20px;
+      font-size: 1rem;
+      font-weight: 700;
+      flex: 1;
+      min-width: 120px;
+    }
+    .btn-primary:active { background: var(--green-dk); }
+    .btn-secondary {
+      background: #fff;
+      color: var(--green);
+      border: 2px solid var(--green);
+      padding: 10px 16px;
+      font-size: .9rem;
+      font-weight: 600;
+    }
+    .btn-danger {
+      background: var(--red);
+      color: #fff;
+      padding: 10px 16px;
+      font-size: .9rem;
+      font-weight: 600;
+    }
+    .btn-add {
+      background: var(--green-lt);
+      color: var(--green-dk);
+      border: 2px dashed var(--green);
+      padding: 12px;
+      font-size: .95rem;
+      font-weight: 700;
+      width: 100%;
+      margin-top: 8px;
+    }
+    .btn-sm {
+      font-size: .78rem;
+      padding: 5px 10px;
+      font-weight: 600;
+    }
+    .btn-edit-ind, .btn-edit-rec {
+      background: var(--blue);
+      color: #fff;
+    }
+    .btn-delete-ind, .btn-delete-rec {
+      background: var(--red);
+      color: #fff;
+    }
+
+    /* ── Individuals list ── */
+    .individual-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      background: var(--gray-lt);
+      border-radius: var(--radius);
+      margin-bottom: 6px;
+      border-left: 4px solid var(--green);
+    }
+    .ind-info { display: flex; flex-direction: column; gap: 2px; }
+    .ind-number { font-weight: 700; font-size: .9rem; color: var(--green-dk); }
+    .ind-detail { font-size: .82rem; color: var(--gray); }
+    .ind-actions { display: flex; gap: 6px; }
+
+    /* ── Records list ── */
+    .record-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      background: #fff;
+      border-radius: var(--radius);
+      margin-bottom: 8px;
+      box-shadow: var(--shadow);
+      border-left: 4px solid var(--green);
+    }
+    .record-info { display: flex; flex-direction: column; gap: 3px; }
+    .record-info strong { font-size: 1rem; }
+    .record-info span   { font-size: .8rem; color: var(--gray); }
+    .record-obs         { font-size: .78rem !important; color: var(--green-dk) !important; }
+    .record-actions     { display: flex; gap: 6px; flex-shrink: 0; }
+
+    /* ── Empty / error states ── */
+    .empty-msg { color: var(--gray); font-size: .9rem; text-align: center; padding: 16px 0; }
+    .error-msg { color: var(--red);  font-size: .9rem; text-align: center; padding: 16px 0; }
+
+    /* ── Section header ── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .section-header h2 { font-size: 1rem; font-weight: 700; }
+
+    /* ── Toast ── */
+    #toast-container {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 260px;
+      max-width: 90vw;
+    }
+    .toast {
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      font-size: .9rem;
+      font-weight: 600;
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,.2);
+      opacity: 1;
+      transition: opacity .4s;
+      text-align: center;
+    }
+    .toast-hide   { opacity: 0; }
+    .toast-success { background: var(--green); }
+    .toast-error   { background: var(--red); }
+    .toast-warn    { background: var(--orange); }
+    .toast-info    { background: var(--blue); }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div>
+      <div class="topbar h1">Monitoreo 10%</div>
+      <div class="subtitle">Santiago Solar</div>
+    </div>
+    <button id="btn-show-records">
+      Registros
+      <span id="records-badge"></span>
+    </button>
+  </div>
+
+  <div id="update-banner" hidden>
+    <span>Nueva versión disponible</span>
+    <button id="btn-update">Actualizar</button>
+  </div>
+
+  <main>
+
+    <!-- ── View: Formulario principal ── -->
+    <div id="view-form">
+
+      <div class="card">
+        <div class="card-title">Datos de la parcela</div>
+        <div id="header-fields"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Individuos</div>
+        <div id="individuals-list"></div>
+        <button class="btn-add" id="btn-add-individual">+ Agregar individuo</button>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary" id="btn-save">Guardar parcela</button>
+        <button class="btn-secondary" id="btn-new">Nueva parcela</button>
+        <button class="btn-secondary" id="btn-export">Exportar CSV</button>
+      </div>
+
+    </div>
+
+    <!-- ── View: Editor de individuo ── -->
+    <div id="view-individual" hidden>
+
+      <div class="card">
+        <div class="section-header">
+          <h2 id="individual-form-title">Nuevo individuo</h2>
+        </div>
+        <div id="individual-fields"></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary"   id="btn-save-individual">Guardar individuo</button>
+        <button class="btn-secondary" id="btn-cancel-individual">Cancelar</button>
+      </div>
+
+    </div>
+
+    <!-- ── View: Listado de registros ── -->
+    <div id="view-records" hidden>
+
+      <div class="section-header">
+        <h2>Registros guardados</h2>
+        <button class="btn-secondary" id="btn-back-from-records">← Volver</button>
+      </div>
+
+      <div id="records-list"></div>
+
+    </div>
+
+  </main>
+
+  <div id="toast-container"></div>
+
+  <script src="db.js"></script>
+  <script src="catalogs.js"></script>
+  <script src="schema_engine.js"></script>
+  <script src="export.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
