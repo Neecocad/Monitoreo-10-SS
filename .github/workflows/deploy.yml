@@ -2,13 +2,13 @@ name: Deploy PWA – Monitoreo 10SS
 
 on:
   push:
-    branches: [claude/build-offline-form-vtITc]
+    branches:
+      - claude/build-offline-form-vtITc
+      - claude/fix-appsheet-404-error-cU5yl
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
@@ -17,9 +17,6 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
 
     steps:
       - name: Checkout
@@ -35,16 +32,19 @@ jobs:
           path: monitoreo-10ss.zip
           retention-days: 30
 
-      - name: Configurar GitHub Pages
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
+      - name: Preparar archivos para Pages
+        run: |
+          mkdir -p dist
+          rsync -av \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='dist' \
+            --exclude='monitoreo-10ss.zip' \
+            . dist/
 
-      - name: Empaquetar sitio para Pages
-        uses: actions/upload-pages-artifact@v3
+      - name: Publicar en GitHub Pages (rama gh-pages)
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: .
-
-      - name: Publicar en GitHub Pages
-        id: deploy
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./dist
