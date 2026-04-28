@@ -20,13 +20,7 @@ async function syncRecord(registro) {
   if (!rows.length) return false;
 
   try {
-    await fetch(APPS_SCRIPT_URL, {
-      method:  'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body:    JSON.stringify({ record_id: registro.id, rows }),
-      mode:    'no-cors'
-    });
-
+    await _postViaForm({ record_id: registro.id, rows });
     _setStatus(registro, 'synced');
     await dbSave(registro);
     _updateSyncUI();
@@ -39,6 +33,45 @@ async function syncRecord(registro) {
     console.warn('Sync fallido:', err.message);
     return false;
   }
+}
+
+function _postViaForm(data) {
+  return new Promise((resolve, reject) => {
+    const frameId = 'sync-frame-' + Date.now();
+
+    const iframe = document.createElement('iframe');
+    iframe.name  = frameId;
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = APPS_SCRIPT_URL;
+    form.target = frameId;
+    form.style.display = 'none';
+
+    const input = document.createElement('input');
+    input.type  = 'hidden';
+    input.name  = 'data';
+    input.value = JSON.stringify(data);
+    form.appendChild(input);
+    document.body.appendChild(form);
+
+    const cleanup = () => {
+      if (document.body.contains(form))   document.body.removeChild(form);
+      if (document.body.contains(iframe)) document.body.removeChild(iframe);
+    };
+
+    const timer = setTimeout(() => { cleanup(); resolve(); }, 8000);
+
+    iframe.addEventListener('load', () => {
+      clearTimeout(timer);
+      cleanup();
+      resolve();
+    });
+
+    form.submit();
+  });
 }
 
 async function syncPending() {
