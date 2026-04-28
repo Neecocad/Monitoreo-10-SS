@@ -1,0 +1,169 @@
+{
+  "form_id": "monitoreo_10ss",
+  "title": "Monitoreo 10% – Santiago Solar",
+  "version": 1,
+  "metadata": {
+    "proyecto": "Santiago Solar",
+    "huso": "19S",
+    "datum": "WGS84"
+  },
+  "header": {
+    "section_label": "Datos de la parcela",
+    "fields": [
+      {
+        "id": "fecha",
+        "label": "Fecha",
+        "type": "date",
+        "required": true
+      },
+      {
+        "id": "sector",
+        "label": "Sector",
+        "type": "text",
+        "required": true
+      },
+      {
+        "id": "codigo_parcela",
+        "label": "Código parcela",
+        "type": "text",
+        "required": true
+      },
+      {
+        "id": "observador",
+        "label": "Observador",
+        "type": "select",
+        "choices_key": "observadores",
+        "required": true
+      },
+      {
+        "id": "utm_este",
+        "label": "UTM Este",
+        "type": "number",
+        "required": true
+      },
+      {
+        "id": "utm_norte",
+        "label": "UTM Norte",
+        "type": "number",
+        "required": true
+      },
+      {
+        "id": "observacion_parcela",
+        "label": "Observación de la parcela",
+        "type": "textarea",
+        "required": false
+      }
+    ]
+  },
+  "individual": {
+    "section_label": "Individuos",
+    "auto_correlative_field": "n_individuo",
+    "fields": [
+      {
+        "id": "n_individuo",
+        "label": "N° individuo",
+        "type": "integer",
+        "auto": true,
+        "readonly": true
+      },
+      {
+        "id": "especie",
+        "label": "Especie",
+        "type": "select",
+        "choices_key": "especie",
+        "required": true
+      },
+      {
+        "id": "replante",
+        "label": "¿La planta es de replante?",
+        "type": "select",
+        "choices_key": "replante",
+        "required": true
+      },
+      {
+        "id": "sobrevivencia",
+        "label": "Sobrevivencia",
+        "type": "select",
+        "choices_key": "sobrevivencia",
+        "required": true,
+        "triggers": [
+          {
+            "when": { "field": "sobrevivencia", "value": 0 },
+            "actions": [
+              { "type": "set",      "target": "vitalidad",           "value": 0 },
+              { "type": "disable",  "target": "vitalidad" },
+              { "type": "disable",  "target": "estado_fitosanitario" },
+              { "type": "disable",  "target": "dano_adicional" },
+              { "type": "disable",  "target": "altura" },
+              { "type": "clear",    "target": "estado_fitosanitario" },
+              { "type": "clear",    "target": "dano_adicional" },
+              { "type": "clear",    "target": "altura" }
+            ]
+          },
+          {
+            "when": { "field": "sobrevivencia", "value": 1 },
+            "actions": [
+              { "type": "enable",   "target": "vitalidad" },
+              { "type": "enable",   "target": "estado_fitosanitario" },
+              { "type": "enable",   "target": "dano_adicional" },
+              { "type": "enable",   "target": "altura" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "vitalidad",
+        "label": "Vitalidad",
+        "type": "select",
+        "choices_key": "vitalidad",
+        "required": true
+      },
+      {
+        "id": "estado_fitosanitario",
+        "label": "Estado fitosanitario",
+        "type": "select",
+        "choices_key": "estado_fitosanitario",
+        "required": true
+      },
+      {
+        "id": "dano_adicional",
+        "label": "Daño adicional",
+        "type": "select",
+        "choices_key": "dano_adicional",
+        "required": true
+      },
+      {
+        "id": "altura",
+        "label": "Altura",
+        "type": "select",
+        "choices_key": "altura",
+        "required": true
+      }
+    ]
+  },
+  "csv_export": {
+    "separator": ";",
+    "bom": true,
+    "sep_hint": true,
+    "columns": [
+      "fecha",
+      "proyecto",
+      "sector",
+      "codigo_parcela",
+      "observador",
+      "utm_este",
+      "utm_norte",
+      "huso",
+      "datum",
+      "observacion_parcela",
+      "n_individuo",
+      "especie",
+      "replante",
+      "sobrevivencia",
+      "vitalidad",
+      "estado_fitosanitario",
+      "dano_adicional",
+      "altura"
+    ]
+  }
+}

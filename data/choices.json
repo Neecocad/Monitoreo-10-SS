@@ -1,0 +1,48 @@
+{
+  "especie": [
+    { "value": "espino",         "label": "Espino" },
+    { "value": "quillay",        "label": "Quillay" },
+    { "value": "litre",          "label": "Litre" },
+    { "value": "sin_identificar","label": "Sin identificar" }
+  ],
+  "replante": [
+    { "value": 0, "label": "0 – No es de replante" },
+    { "value": 1, "label": "1 – No identificable" },
+    { "value": 2, "label": "2 – Replante 2024" },
+    { "value": 3, "label": "3 – Replante 2025" }
+  ],
+  "sobrevivencia": [
+    { "value": 0, "label": "0 – Muerto" },
+    { "value": 1, "label": "1 – Vivo" }
+  ],
+  "vitalidad": [
+    { "value": 0, "label": "0 – Muerto" },
+    { "value": 1, "label": "1 – Vulnerable" },
+    { "value": 2, "label": "2 – Regular" },
+    { "value": 3, "label": "3 – Óptimo" }
+  ],
+  "estado_fitosanitario": [
+    { "value": "S", "label": "S – Sano" },
+    { "value": "E", "label": "E – Enfermo" },
+    { "value": "D", "label": "D – Dañado" }
+  ],
+  "dano_adicional": [
+    { "value": 0, "label": "0 – Sin daño adicional observable" },
+    { "value": 1, "label": "1 – Herbivoría por conejo" },
+    { "value": 2, "label": "2 – Herbivoría por ratón" },
+    { "value": 3, "label": "3 – Mecánico" }
+  ],
+  "altura": [
+    { "value": 1, "label": "1 – 0–30 cm" },
+    { "value": 2, "label": "2 – 30–60 cm" },
+    { "value": 3, "label": "3 – 60–100 cm" },
+    { "value": 4, "label": "4 – 100–150 cm" },
+    { "value": 5, "label": "5 – >150 cm" }
+  ],
+  "observadores": [
+    { "value": "cristian_morales",  "label": "Cristian Morales" },
+    { "value": "hector_diaz",       "label": "Héctor Díaz" },
+    { "value": "junior_maurice",    "label": "Junior Maurice" },
+    { "value": "sabina_madariaga",  "label": "Sabina Madariaga" }
+  ]
+}
