@@ -20,14 +20,12 @@ async function syncRecord(registro) {
   if (!rows.length) return false;
 
   try {
-    const res = await fetch(APPS_SCRIPT_URL, {
-      method:   'POST',
-      headers:  { 'Content-Type': 'text/plain' },
-      body:     JSON.stringify({ record_id: registro.id, rows }),
-      redirect: 'follow'
+    await fetch(APPS_SCRIPT_URL, {
+      method:  'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body:    JSON.stringify({ record_id: registro.id, rows }),
+      mode:    'no-cors'
     });
-    const data = await res.json();
-    if (data.status !== 'ok') throw new Error(data.mensaje || 'Respuesta inesperada');
 
     _setStatus(registro, 'synced');
     await dbSave(registro);
