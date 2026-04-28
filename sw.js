@@ -9,6 +9,7 @@ const ASSETS = [
   './schema_engine.js',
   './catalogs.js',
   './export.js',
+  './sync.js',
   './sw.js',
   './version.json',
   './data/schemas.json',

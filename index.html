@@ -58,6 +58,15 @@
       font-size: .85rem;
       white-space: nowrap;
     }
+    .sync-status {
+      font-size: .72rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 10px;
+      white-space: nowrap;
+    }
+    .sync-ok      { background: rgba(255,255,255,.2); color: #fff; }
+    .sync-pending { background: var(--orange);        color: #fff; }
     #records-badge {
       position: absolute;
       top: -6px; right: -6px;
@@ -302,10 +311,13 @@
       <div class="topbar h1">Monitoreo 10%</div>
       <div class="subtitle">Santiago Solar</div>
     </div>
-    <button id="btn-show-records">
-      Registros
-      <span id="records-badge"></span>
-    </button>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+      <button id="btn-show-records">
+        Registros
+        <span id="records-badge"></span>
+      </button>
+      <span id="sync-status" class="sync-status sync-ok">✓ Sincronizado</span>
+    </div>
   </div>
 
   <div id="update-banner" hidden>
@@ -374,6 +386,7 @@
   <script src="catalogs.js"></script>
   <script src="schema_engine.js"></script>
   <script src="export.js"></script>
+  <script src="sync.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

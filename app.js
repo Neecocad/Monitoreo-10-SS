@@ -17,6 +17,7 @@ async function initApp() {
     await _renderRecordsList();
     _startNewRecord();
     _registerSW();
+    initSync();
   } catch (err) {
     showToast('Error al iniciar la app: ' + err.message, 'error');
     console.error(err);
@@ -27,11 +28,12 @@ async function initApp() {
 
 function _startNewRecord() {
   currentRecord = {
-    id:         generateId(),
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    header:     {},
-    individuos: []
+    id:          generateId(),
+    created_at:  new Date().toISOString(),
+    updated_at:  new Date().toISOString(),
+    sync_status: 'pending',
+    header:      {},
+    individuos:  []
   };
   editingIndividualIdx = null;
   resetFields(schema.header.fields);
@@ -76,6 +78,7 @@ async function _saveCurrentRecord() {
     await dbSave(currentRecord);
     showToast('Parcela guardada correctamente.', 'success');
     await _renderRecordsList();
+    syncRecord(currentRecord);
   } catch (err) {
     showToast('Error al guardar: ' + err.message, 'error');
     console.error(err);
