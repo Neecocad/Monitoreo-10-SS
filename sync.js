@@ -1,4 +1,4 @@
-const APPS_SCRIPT_URL = 'https://script.google.com/a/macros/biocys.com/s/AKfycbzcwarfdLr32vYTjrlCkK4YYgZ33wx_yzldjDIn2KyWj7hzJYFOXm3KCoQBkPwIo7UkSQ/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx2zNSu-76gQR9sHGGT2WO4xZC9StyguH1AdECoDT64PZJEM5KCkglQyuwdQGFecJKKng/exec';
 
 function initSync() {
   window.addEventListener('online', () => {
