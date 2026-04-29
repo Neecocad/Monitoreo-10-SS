@@ -90,7 +90,7 @@ async function syncPending() {
 }
 
 function _flattenRecord(registro) {
-  if (!window.schema) return [];
+  if (!schema) return [];
   return registro.individuos.map(ind => {
     const row = {};
     for (const col of schema.csv_export.columns) {
