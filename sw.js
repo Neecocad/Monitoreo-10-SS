@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'monitoreo10ss-';
-const CACHE_NAME   = CACHE_PREFIX + 'v1';
+const CACHE_NAME   = CACHE_PREFIX + 'v2';
 
 const ASSETS = [
   './',
@@ -40,6 +40,9 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   const url = e.request.url;
+
+  if (!url.startsWith(self.location.origin)) return;
+
 
   if (url.includes('version.json')) {
     e.respondWith(
